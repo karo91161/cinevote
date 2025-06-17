@@ -1,6 +1,6 @@
 :root {
-  --color-primary: #6741d9;
-  --color-primary-light: #7950f2;
+  --color-primary: #2563eb;
+  --color-primary-light: #3b82f6;
   --color-text: #dee2e6;
   --color-text-dark: #adb5bd;
   --color-background-100: #343a40;
@@ -52,9 +52,29 @@ body {
 .box {
   width: 42rem;
   max-width: 42rem;
+  height: 100%;
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
   position: relative;
+
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.box::-webkit-scrollbar-track {
+  background: var(--color-background-500); /* sötét háttér */
+  border-radius: 10px;
+}
+
+.box::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary-light); /* lila thumb */
+  border-radius: 10px;
+  border: 2px solid var(--color-background-500); /* szép szegély */
 }
 
 .loader {
@@ -286,6 +306,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
+  width: fit-content;
 }
 
 .btn-add {
