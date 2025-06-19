@@ -66,11 +66,17 @@ export default function MovieDetails({
 
   useEffect(
     function () {
-      document.addEventListener("keydown", function (e) {
+      function callback(e) {
         if (e.code === "Escape") {
           onCloseMovie();
         }
-      });
+      }
+      document.addEventListener("keydown", callback);
+
+      //cleanup: remove event listener
+      return function () {
+        document.removeEventListener("keydown", callback);
+      };
     },
     [onCloseMovie]
   );
