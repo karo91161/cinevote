@@ -3,7 +3,7 @@ import { average } from "../App";
 export default function WatchedSummary({ watched }) {
   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
   const avgUserRating = average(watched.map((movie) => movie.userRating));
-  const avgRuntime = average(watched.map((movie) => movie.runtime));
+  const totalRuntime = watched.reduce((sum, movie) => sum + movie.runtime, 0);
 
   return (
     <div className="summary">
@@ -23,7 +23,7 @@ export default function WatchedSummary({ watched }) {
         </p>
         <p>
           <span>⏳</span>
-          <span>{avgRuntime} min</span>
+          <span>{totalRuntime} min</span>
         </p>
       </div>
     </div>

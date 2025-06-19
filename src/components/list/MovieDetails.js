@@ -1,19 +1,30 @@
 import { useEffect, useState } from "react";
 import StarRating from "../common/StarRating";
 import Loader from "../common/Loader";
+import { cleanup } from "@testing-library/react";
 
 const KEY = process.env.REACT_APP_OMDB_KEY;
 
-export default function MovieDetails({ selectedId, onCloseMovie }) {
+export default function MovieDetails({
+  selectedId,
+  onCloseMovie,
+  onAddWatched,
+  watched,
+}) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState("");
+  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
+  const watchedRating = watched.find(
+    (movie) => movie.imdbID === selectedId
+  )?.userRating;
 
   const {
     Title: title,
     Year: year,
     Poster: poster,
     Runtime: runtime,
-    imdbrating,
+    imdbRating,
     Plot: plot,
     Released: released,
     Actors: actors,
@@ -49,10 +60,56 @@ export default function MovieDetails({ selectedId, onCloseMovie }) {
         }
       }
       getMovieDetails();
-      console.log(movie.poster);
     },
     [selectedId]
   );
+
+  useEffect(
+    function () {
+      function callback(e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+        }
+      }
+      document.addEventListener("keydown", callback);
+
+      //cleanup: remove event listener
+      return function () {
+        document.removeEventListener("keydown", callback);
+      };
+    },
+    [onCloseMovie]
+  );
+
+  useEffect(
+    function () {
+      if (!title) {
+        return;
+      }
+      document.title = `Movie | ${title}`;
+
+      // cleanup example
+      return function () {
+        document.title = "Cinevote";
+      };
+    },
+    [title]
+  );
+
+  function handleAdd() {
+    const newWatchedMovie = {
+      imdbID: selectedId,
+      title,
+      year,
+      poster,
+      imdbRating: Number(imdbRating),
+      runtime: Number(runtime.split(" ").at(0)),
+      userRating,
+    };
+
+    onAddWatched(newWatchedMovie);
+    onCloseMovie();
+  }
 
   return (
     <div className="details">
@@ -84,13 +141,26 @@ export default function MovieDetails({ selectedId, onCloseMovie }) {
               <p>{genre}</p>
               <p>
                 <span>⭐</span>
-                {imdbrating} IMDb rating
+                {imdbRating} IMDb rating
               </p>
             </div>
           </header>
           <section>
             <div className="rating">
-              <StarRating size={24} />
+              {!isWatched ? (
+                <>
+                  <StarRating size={24} onSetRating={setUserRating} />
+                  {userRating > 0 && (
+                    <button className="btn-add" onClick={handleAdd}>
+                      + Add to my list
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p>
+                  You rated this movie: {watchedRating} <span>⭐️</span>
+                </p>
+              )}
             </div>
             <p>
               <em>{plot}</em>
