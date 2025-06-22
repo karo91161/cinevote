@@ -20,11 +20,17 @@ A small React project for learning purposes, focusing on state management, compo
 
 Below are a few screenshots of the current UI:
 
-![Home screen]()  
-*Main movie list and voting interface*
+![Home screen](home.png)  
+*Home screen*
 
-![Voting example]()  
-*Voting in action with updated vote counts*
+![Movie details](movie-details.png)  
+*Movie details*
+
+![Rate](rate.png)  
+*Rating component*
+
+![Watched](watched-list.png)  
+*Home screen with watched movie list*
 
 
 ## 🚀 Getting Started
