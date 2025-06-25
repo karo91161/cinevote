@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import StarRating from "../common/StarRating";
 import Loader from "../common/Loader";
-import { cleanup } from "@testing-library/react";
+import { useKey } from "../common/useKey";
 
 const KEY = process.env.REACT_APP_OMDB_KEY;
 
@@ -14,6 +14,9 @@ export default function MovieDetails({
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
+
+  const countRef = useRef(0);
+
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
   const watchedRating = watched.find(
     (movie) => movie.imdbID === selectedId
@@ -31,6 +34,15 @@ export default function MovieDetails({
     Director: director,
     Genre: genre,
   } = movie;
+
+  useEffect(
+    function () {
+      if (userRating) {
+        countRef.current++;
+      }
+    },
+    [userRating]
+  );
 
   useEffect(
     function () {
@@ -64,22 +76,8 @@ export default function MovieDetails({
     [selectedId]
   );
 
-  useEffect(
-    function () {
-      function callback(e) {
-        if (e.code === "Escape") {
-          onCloseMovie();
-        }
-      }
-      document.addEventListener("keydown", callback);
-
-      //cleanup: remove event listener
-      return function () {
-        document.removeEventListener("keydown", callback);
-      };
-    },
-    [onCloseMovie]
-  );
+  // using my custom hook here to handle key action globally
+  useKey("Escape", onCloseMovie);
 
   useEffect(
     function () {
@@ -105,6 +103,7 @@ export default function MovieDetails({
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(" ").at(0)),
       userRating,
+      countRatingDecisions: countRef.current,
     };
 
     onAddWatched(newWatchedMovie);
@@ -162,14 +161,9 @@ export default function MovieDetails({
                 </p>
               )}
             </div>
-            <p>
-              <em>{plot}</em>
-              <br />
-              <br />
-              <p>Starring {actors}</p>
-              <br />
-              <p>Directed By {director}</p>
-            </p>
+            <em>{plot}</em>
+            <p>Starring {actors}</p>
+            <p>Directed By {director}</p>
           </section>
         </>
       )}
