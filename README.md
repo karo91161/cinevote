@@ -7,12 +7,21 @@ A small React project for learning purposes, focusing on state management, compo
 - Fetch and display movie data (static or API-ready)
 - Allow users to vote on movies
 - Display vote counts
+- Store watched movie list in `localStorage`
+- Autofocus on the search input when page loads or when pressing **Enter**
+- Track user rating decision flow using `useRef`
 - Responsive UI
+
+## 🛠️ Custom Hooks
+
+- `useMovies` – Handles movie data fetching from the API
+- `useLocalStorage` – Global getter and setter for `localStorage` operations
+- `useKey` – Global keypress handler (e.g., Enter, Escape)
 
 ## ⚙️ Technologies Used
 
 - React (functional components)
-- React Hooks (useState, useEffect)
+- React Hooks (`useState`, `useEffect`, `useRef`, custom hooks)
 - CSS Modules
 - JavaScript (ES6+)
 
